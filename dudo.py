@@ -3,6 +3,8 @@ import random
 
 CHALLENGE_FAIL_VALUE = 1
 CHALLENGE_SUCCESS_VALUE = -1
+CLAIMS_BY_STRENGTH = ((1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (0, 1),
+                      (1, 2), (2, 2), (3, 2), (4, 2), (5, 2), (0, 2))
 seen_histories = {}
 
 
@@ -64,9 +66,13 @@ class DudoHistory:
                 break
         else:
             return CHALLENGE_FAIL_VALUE
-        claim_num = i // 6 + 1
-        claim_rank = i % 6
-        if dice.count(claim_rank) >= claim_num:
+        claim = CLAIMS_BY_STRENGTH[i]
+        claim_num = claim[1]
+        claim_rank = claim[0]
+        real_count = dice.count(claim_rank)
+        if claim_rank != 0:
+            real_count += dice.count(0)
+        if real_count >= claim_num:
             return CHALLENGE_FAIL_VALUE
         else:
             return CHALLENGE_SUCCESS_VALUE
